@@ -5,8 +5,13 @@ import { compose } from 'redux'
 import { Link } from 'react-router-dom';
 import Loader from './Loader';
 import Modal from './Modal';
+import { storage } from '../apis/fbConfig';
 
 class MoviesList extends Component {
+
+    componentDidMount() {
+
+    }
 
 
     renderAdmin(registeredUserId, id) {
@@ -19,20 +24,25 @@ class MoviesList extends Component {
             if (currentUserId === registeredUserId) {
                 return (
                     <React.Fragment>
-                        <Link to={'/'} className="ui labeled icon left floated primary button">
+                        <Link to={`/movies/edit/${id}`} className="circular ui icon purple button">
                             <i className="edit icon"></i>
-                        Edit
                     </Link>
-                    <Link to={`/movies/delete/${id}`} className="ui labeled icon right floated red button">
-                            <i className="right trash icon"></i>
-                        Delete
+                    <Link to={`/movies/delete/${id}`} className="circular ui icon red button">
+                            <i className="trash icon"></i>
                     </Link>
                     </React.Fragment>
                 )
             }
         }
         return (
-            <button className="fluid ui button">Sign In to edit or delete</button>
+            <React.Fragment>
+            <button className="circular ui icon button">
+                <i className="edit icon"></i>
+            </button>
+            <button className="circular ui icon button">
+                <i className="icon trash"></i>
+          </button>
+          </React.Fragment>
         )
     }
 
@@ -43,27 +53,21 @@ class MoviesList extends Component {
             const { id, title, duration, year, createdBy, image } = movie
             return (
                 <div className="column" key={id}>
-
-                    <div className="ui fluid card">
-                        <Link to={`/movies/${id}`}  >
-                            <div className="image">
-                                <img src={image} alt={title} style={{ width: '357px', height: '500px' }} />
-                            </div>
+                    <div className="ui fluid card"  >
+                        <Link to={`/movies/${id}`}  className="ui large image" style={{borderStyle:'outset', maxHeight:'80%'}}>
+                                <img src={image} alt={title}   />
                         </Link>
-                        <div className="center aligned content">
-                            <h3 className="header">{title}</h3>
-                        </div>
                         <div className="center aligned content">
                             <span >{duration} |</span>
                             <span >{year}</span>
                         </div>
-                        <div className="content">
-                            {createdBy.userEmail}
-                            <div className="right floated author">
+                        <div className="center aligned content">
+                            <h3 className="meta"> Added by:</h3> 
+                            <div >
                                 <img className="ui avatar image" src={createdBy.imageUrl} alt='' />{movie.createdBy.userName}
                             </div>
                         </div>
-                        <div className="content">
+                        <div className="center aligned content">
                             {this.renderAdmin(createdBy.userId, id)}
                         </div>
                     </div>
@@ -75,10 +79,6 @@ class MoviesList extends Component {
 
     }
 
-    renderModal() {
-        console.log('modal props', this.props)
-    
-    }
     render() {
         const { movies, firestoreMovies } = this.props
         // console.log('movies:', movies)
@@ -89,10 +89,10 @@ class MoviesList extends Component {
             <div>
                 <h1>Movies on Show</h1>
                 {!firestoreMovies ?
-                    <Loader />
+                    <div><Loader /></div>
                     :
 
-                    <div className="ui stackable three column grid">
+                    <div className="ui stackable five column grid">
                         {this.renderList(firestoreMovies)}
                     </div>
                 }
@@ -104,7 +104,7 @@ class MoviesList extends Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log('state:', state)
+    //console.log('state:', state)
     return ({
         firestoreMovies: state.firestore.ordered.cinema,
         isSignedIn: state.googleAuth.isSignedIn,

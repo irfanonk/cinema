@@ -4,6 +4,8 @@ import { Field, reduxForm} from 'redux-form';
 import { connect } from 'react-redux';
 import { compose } from 'redux'
 import MovieImageCreate from './MovieImageCreate';
+import FieldFileInput from './FieldFileInput';
+import { createMovieImage } from '../store/actions/moviesActions';
 
 class MovieForm extends Component {
     
@@ -34,9 +36,18 @@ class MovieForm extends Component {
         //console.log("new stream input:" , formValues)
         //console.log('props:',this.props)
     }
+    onChange = e => {
+        //to prevent crashing if user cancels selecting an image
+        if(e.target.files[0]) {
+            this.props.createMovieImage(e.target.files[0])
+        }
+        console.log('imageCreate', e.target.files[0])
+    }
+    
     
 
     render() {
+        //console.log("reduxForm methods:", this.props )
         return (
             <div className="ui centered grid">
                 <div className="ten wide column" >
@@ -54,8 +65,9 @@ class MovieForm extends Component {
                     <Field name="country" component={this.renderInput} label="Country"/>
                     <Field name="director" component={this.renderInput} label="Director"/>
                     <Field name="trailerUrl" component={this.renderInput} label="TrailerUrl"/>
-                    <MovieImageCreate label="Image"/>
-                    <button className="fluid ui button primary"><i className="paper plane icon"></i>Create</button>     
+                    <MovieImageCreate label="Image" onChange={this.onChange} />
+                    {/* <Field compnenent={FieldFileInput} label=''Image/> */}
+                    <button className="fluid ui button primary"><i className="paper plane icon"></i>{this.props.submitButton}</button>     
                     </form>
                 </div>
             </div>
@@ -93,7 +105,7 @@ const mapStateToProps = (state) => {
 
 
 export default compose(
-    connect(mapStateToProps, {  }),
+    connect(mapStateToProps, { createMovieImage }),
     reduxForm({
         form: 'movieForm',
         // validate:validate,

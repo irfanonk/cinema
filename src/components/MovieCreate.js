@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import MovieForm from './MovieForm';
 import GoogleAuth from '../components/GoogleAuth';
 import Modal from './Modal';
-import { createMovie, fetchMovies, deleteMovie } from '../store/actions/moviesActions';
+import { createMovie, fetchMovies } from '../store/actions/moviesActions';
 
 
 class MovieCreate extends Component {
@@ -14,8 +14,8 @@ class MovieCreate extends Component {
     }
     componentDidUpdate(pP, pS, sS) {
         // this.checkCreateStatus()
-        console.log('pP', pP)
-        console.log(this.props.createRes.movie.id)
+        // console.log('pP', pP)
+        // console.log(this.props.createRes.movie.id)
         if (pP.createRes.movie.id !== this.props.createRes.movie.id) {
                 this.setState({isModalOpen:true})
             }
@@ -32,16 +32,16 @@ class MovieCreate extends Component {
         if (isModalOpen === true) {
             console.log('true')
             return (
-                <Modal
-                    content={<h1 style={{textAlign:'center'}} >Successfully Created</h1>}
-                    actions={this.renderCreateAction()}
-                />
+                    <Modal
+                        content={<h1  >Successfully Created</h1>}
+                        actions={this.renderCreateAction()}
+                    />
             )
         } if (isModalOpen === false) {
             console.log('false')
             return (
                 <Modal
-                    content={<h1 style={{textAlign:'center'}}>There's been an error. Try again!</h1>}
+                    content={<h1>There's been an error. Try again!</h1>}
                     actions={<Link to={'/movies/new'} className="ui active button">Return Home</Link>}
                 />)
         }
@@ -51,7 +51,7 @@ class MovieCreate extends Component {
     onSubmit = (formValues) => {
         const { history } = this.props
         console.log('onSubmit this', this)
-        this.props.createMovie(formValues, history);
+        this.props.createMovie(formValues);
         //console.log('formValues', formValues)
         return(
             <Modal
@@ -63,7 +63,10 @@ class MovieCreate extends Component {
         const { isSignedIn } = this.props
         if (isSignedIn === true) {
             return (
-                <MovieForm onSubmit={this.onSubmit} />
+                <MovieForm 
+                onSubmit={this.onSubmit} 
+                
+                />
             )
         } else if (isSignedIn === false) {
             return (
@@ -117,7 +120,7 @@ class MovieCreate extends Component {
 
 const mapStateToProps = (state) => {
     console.log('state:', state)
-    console.log('movie id:', state.movie.id)
+    // console.log('movie id:', state.movie.id)
     
     return ({
         isSignedIn: state.googleAuth.isSignedIn,
@@ -126,4 +129,4 @@ const mapStateToProps = (state) => {
     })
 }
 
-export default connect(mapStateToProps, { createMovie, deleteMovie })(MovieCreate);
+export default connect(mapStateToProps, { createMovie })(MovieCreate);

@@ -19,29 +19,29 @@ class MovieDelete extends Component {
             )
         }
     }
-    renderActions() {
-       const {history} = this.props
+    renderActions( movie, history) {
+       console.log('delete movie props', movie)
         return (
             <React.Fragment>
                 <Link to="/" className="ui secondary basic button">Cancel</Link>
                 <button 
                 className="ui negative basic button" 
-                onClick={() => this.props.deleteMovie(this.props.match.params.id, history)}
+                onClick={() => this.props.deleteMovie(movie, history)}
                 >Delete
                 </button>
             </React.Fragment>
         )
     }
     render() {
-        console.log('delete props', this.props)
-        const { movie, history, isDeleteOk } = this.props
+        //console.log('delete props', this.props)
+        const { movie, history, } = this.props
         //console.log(movie)
         return (
             <div>
                 <Modal
                     title="Delete Movie"
                     content={this.renderContent(movie)}
-                    actions={this.renderActions()}
+                    actions={this.renderActions( movie, history)}
                     onDismiss={() => history.push('/')}
                 />
             </div>

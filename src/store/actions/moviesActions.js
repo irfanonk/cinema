@@ -6,15 +6,43 @@ import {
     CREATE_MOVIE_IMAGE,
     DELETE_MOVIE_SUCCESS,
     DELETE_MOVIE_FAILED,
+    EDIT_MOVIE_SUCCESS,
+    EDIT_MOVIE_FAILED,
+    UPLOAD_MOVIE_IMAGE,
+
 } from './types';
 import { storage } from '../../apis/fbConfig';
 
-//we have to tell to firebase package about our project
-export const createMovie = (formValues, history) =>  async (dispatch, getState, {getFirestore}) => {
-    //we are pausing dispatch(thunk) while doing async stuff
-    //getting firesotre and adding new document
+     const uploadMovieImage = () => (dispatch, getState) => {
+    console.log( 'uploadMovieImage invoked')
+    const {createdImage} = getState().movieImage;
+    const uploadTask =  storage.ref(`images/${createdImage.name}`).put(createdImage)
+    console.log('uploadTask', uploadTask)
+    uploadTask.on('state_changed',
+    (snapshot) =>{ 
+        console.log('snapshot', snapshot)
+    },
+    (error) => {
+        console.log('error', error)
+    },
+    () => {
+    storage.ref('images').child(createdImage.name).getDownloadURL().then((url) => {
+        dispatch({type:UPLOAD_MOVIE_IMAGE, payload:url})
+        console.log('uploadMovieImage', url)
+    })
+    
+    })
+    
+}
+
+export const createMovie = (formValues) =>  async (dispatch, getState, {getFirestore}) => {
+    // console.log('createMovie fromValues', formValues)
+    const {createdImage} = getState().movieImage;
+    console.log('create movie image', createdImage)
+    await dispatch(uploadMovieImage())
+    const url  = getState().movieImage.uploadedImage
+    console.log('createMovie Url', url)
     const firestore = getFirestore();
-    const {image} = getState().movieImage
     const currentUserProfile = getState().googleAuth.response.currentUser.get().getBasicProfile()
     const userProfile = {
         userId:currentUserProfile.getId(),
@@ -22,32 +50,19 @@ export const createMovie = (formValues, history) =>  async (dispatch, getState, 
         userEmail:currentUserProfile.getEmail(),
         imageUrl:currentUserProfile.getImageUrl(),    
     }
-    const uploadTask =  storage.ref(`images/${image.name}`).put(image)
-    //on('state_changed', progress, error, complete)
-    await uploadTask.on('state_changed', 
-    (snapshot)=> {
-
-    },
-    (error)=> {console.log(error)
-    },
-    //to get image from firebase storage
-    () => {
-        storage.ref('images').child(image.name).getDownloadURL().then( async url => {
-            await firestore.add(
-                {collection :'cinema' },
-                {
-                ...formValues,
-                image: url,
-                createdBy: userProfile,                
-                createdAt: new Date(),
-            }).then((response) => {
-                dispatch ( { type: CREATE_MOVIE_SUCCESS, payload:response })
-            }).catch((err) =>{
-                dispatch ( { type: CREATE_MOVIE_FAILED, payload:err })
-            })
-        })
-    });
-    //history.push('/')
+    firestore.add(
+        {collection :'cinema' },
+        {
+        ...formValues,
+        imageUrl: url,
+        imageName:createdImage.name,
+        createdBy: userProfile,                
+        createdAt: new Date(),
+    }).then((response) => {
+        dispatch ( { type: CREATE_MOVIE_SUCCESS, payload:response })
+    }).catch((err) =>{
+        dispatch ( { type: CREATE_MOVIE_FAILED, payload:err })
+    })
 }
 
 // export const createMovie = (formValues) => async (dispatch) => {
@@ -57,21 +72,45 @@ export const createMovie = (formValues, history) =>  async (dispatch, getState, 
 //     //console.log('createMovie response', response)
 // }
 
+//to use image as a blob for preview
 export const createMovieImage = (image) => async dispatch =>{
     image.imgPrevUrl = await URL.createObjectURL(image)
     dispatch({type:CREATE_MOVIE_IMAGE, payload:image})
 }
 
-export const deleteMovie = (id, history) => async (dispatch, getState, {getFirestore}) => {
+export const deleteMovie = (movie, history) => (dispatch, getState, {getFirestore}) => {
     // console.log('delete action id', id)
     // console.log('delete action history', history)
     const firestore = getFirestore();
-    await firestore.delete({ collection: 'cinema', doc:`${id}` }).then(() => {
-        return({type:DELETE_MOVIE_SUCCESS});
+     firestore.delete({ collection: 'cinema', doc:`${movie.id}`, }).then(() => {
+        dispatch({type:DELETE_MOVIE_SUCCESS});
     }).catch((error) => {
-        return({type:DELETE_MOVIE_FAILED, payload:error})
+        dispatch({type:DELETE_MOVIE_FAILED, payload:error})
     });
+    storage.ref('images').child(`${movie.imageName}`).delete().then((response) =>{
+        console.log('image delete success', response)
+    }).catch((error) => {
+        console.log('image delete error', error)
+    })
     history.push('/')
+}
+
+
+export const editMovie = (formValues, history, movie ) => (dispatch, getState, {getFirestore}) => {
+    
+    const firestore = getFirestore();
+     firestore.update({ collection: 'cinema', doc:`${movie.id}`},
+        {
+        ...formValues,
+        updateddAt: new Date(),
+
+        }  
+    ).then((response) => {
+        dispatch({type:EDIT_MOVIE_SUCCESS, payload:response});
+    }).catch((error) => {
+        dispatch({type:EDIT_MOVIE_FAILED, payload:error})
+    });
+    //history.push('/')
 }
 
 // export const fetchMovies = () => async (dispatch) => {

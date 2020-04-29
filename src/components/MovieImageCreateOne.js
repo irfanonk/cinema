@@ -5,6 +5,15 @@ import { createMovieImage } from '../store/actions/moviesActions';
 
  class MovieImageCreate extends Component {
 
+    onChange = e => {
+        //to prevent crashing if user cancels selecting an image
+        if(e.target.files[0]) {
+            this.props.createMovieImage(e.target.files[0])
+        }
+        console.log('imageCreate', e.target.files[0])
+    }
+
+
     
     render() {
         const {label, imagePreviewUrl} = this.props
@@ -16,7 +25,7 @@ import { createMovieImage } from '../store/actions/moviesActions';
                 <input 
                 type="file" 
                 accept='.jpg, .png, .jpeg' 
-                onChange={this.props.onChange} 
+                onChange={this.onChange} 
                 />
                 <div className="content">
                     <h3>Image Preview</h3>
@@ -34,7 +43,7 @@ import { createMovieImage } from '../store/actions/moviesActions';
 const mapStateToProps = (state) => {
     //console.log('state', state)
     return {
-        imagePreviewUrl:state.movieImage.createdImage.imgPrevUrl
+        imagePreviewUrl:state.movieImage.image.imgPrevUrl
     }
 }
 

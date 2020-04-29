@@ -6,6 +6,8 @@ import {
     CREATE_MOVIE_FAILED,
     DELETE_MOVIE_SUCCESS,
     DELETE_MOVIE_FAILED,
+    EDIT_MOVIE_SUCCESS,
+    EDIT_MOVIE_FAILED,
 } from '../actions/types';
 
 
@@ -20,6 +22,10 @@ import {
                 return {...state, movie:action.payload, isCreateOk:true};
             case CREATE_MOVIE_FAILED:
                 return {...state, error:action.payload,  isCreateOk:false };
+            case EDIT_MOVIE_SUCCESS:
+                return {...state, movie:action.payload, isEditOk:true};
+            case EDIT_MOVIE_FAILED:
+                return {...state, error:action.payload,  isEditOk:false };
             case DELETE_MOVIE_SUCCESS:
                 return {...state, isDeleteOk:true};
             case DELETE_MOVIE_FAILED:
