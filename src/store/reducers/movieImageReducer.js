@@ -1,8 +1,12 @@
-import { CREATE_MOVIE_IMAGE, UPLOAD_MOVIE_IMAGE} from '../actions/types';
+import { CREATE_MOVIE_IMAGE, UPLOAD_MOVIE_IMAGE, UPLOAD_IMAGE_PROGRESS} from '../actions/types';
 
     const initialState ={
-        createdImage:[],
-        uploadedImage:[]
+        createdImage:{
+            imgPrevUrl:'',
+            name:'',
+            size:'',
+        },
+        uploadImgPercent:0
     }
 
     export default (state =initialState, action) => {
@@ -10,7 +14,9 @@ import { CREATE_MOVIE_IMAGE, UPLOAD_MOVIE_IMAGE} from '../actions/types';
             case CREATE_MOVIE_IMAGE:
                 return {...state, createdImage:action.payload};
             case UPLOAD_MOVIE_IMAGE:
-                return {...state, uploadedImage:action.payload};
+                return {...state, uploadedImgUrl:action.payload};
+            case UPLOAD_IMAGE_PROGRESS:
+                return {...state, uploadImgPercent:action.payload}
             default:
                 return state;
 

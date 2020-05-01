@@ -18,9 +18,9 @@ class MovieEdit extends Component {
         console.log('pP', pP)
         console.log('editRes', this.props.editRes)
         //console.log(this.props.editRes.movie.id)
-        if (pP.editRes.movie.id !== this.props.editRes.movie.id) {
-                this.setState({isModalOpen:true})
-            }
+        // if (pP.editRes.movie.id !== this.props.editRes.movie.id) {
+        //         this.setState({isModalOpen:true})
+        //     }
     }
     renderEditAction(){
         return (<React.Fragment>
@@ -35,7 +35,7 @@ class MovieEdit extends Component {
             console.log('true')
             return (
                     <Modal
-                        content={<h1  >Successfully Created</h1>}
+                        content={<h1  >Successfully Edited</h1>}
                         actions={this.renderEditAction()}
                         submitButton='Update'
                     />
@@ -52,7 +52,7 @@ class MovieEdit extends Component {
 
 
     onSubmit = (formValues) => {
-        const { history, movie } = this.props
+        const { history, movie, uploadedImgUrl } = this.props
         console.log('onSubmit this', this)
         this.props.editMovie(formValues, history, movie);
         console.log('formValues', formValues)
@@ -67,11 +67,12 @@ class MovieEdit extends Component {
             <MovieForm 
             onSubmit={this.onSubmit}
             initialValues={_.pickBy(this.props.movie)}
+            initialImgSrc={this.props.movie.image.imageUrl}
             />
         )
     }
     render() {
-             
+        console.log('edit props', this.props)
         return (
             <div>
                 {/* {this.checkEditStatus()} */}
@@ -87,6 +88,7 @@ const mapStateToProps = (state, ownProps) => {
     return ({
         movie: movies[ownProps.match.params.id],
         editRes: state.movie,
+        uploadedImgUrl:state.movieImage.uploadedImgUrl,
     })
 }
 

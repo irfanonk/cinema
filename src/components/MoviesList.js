@@ -55,7 +55,7 @@ class MoviesList extends Component {
                 <div className="column" key={id}>
                     <div className="ui fluid card"  >
                         <Link to={`/movies/${id}`}  className="ui large image" style={{borderStyle:'outset', maxHeight:'80%'}}>
-                                <img src={image} alt={title}   />
+                                <img src={image.imageUrl} alt={title}   />
                         </Link>
                         <div className="center aligned content">
                             <span >{duration} |</span>

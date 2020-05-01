@@ -55,7 +55,9 @@ class MovieCreate extends Component {
         //console.log('formValues', formValues)
         return(
             <Modal
-                content={<h1>Creating...</h1>} />
+                content={<h1>Creating...</h1>} 
+                />
+                
         )
     }
 
@@ -65,7 +67,7 @@ class MovieCreate extends Component {
             return (
                 <MovieForm 
                 onSubmit={this.onSubmit} 
-                
+                submitButtonName="Create"
                 />
             )
         } else if (isSignedIn === false) {
