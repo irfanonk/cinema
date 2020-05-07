@@ -48,7 +48,7 @@ class MovieCard extends Component {
                     </div>
                     <div className="ui two column row">
                         <div className="column">
-                            <img src={image} style={{height:'634px', width:'550px'}}/>
+                            <img src={image.imageUrl} alt={title} style={{height:'634px', width:'550px'}}/>
                         </div>
                         <div className="column" >
                             <div className="ui styled accordion" >

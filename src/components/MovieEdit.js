@@ -3,59 +3,45 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux'
-import { editMovie } from '../store/actions/moviesActions';
+import { editMovie, clearCreateValues, deleteMovieImage} from '../store/actions/moviesActions';
 import _ from 'lodash'
 import Modal from './Modal';
 import Loader from './Loader'
 import MovieForm from './MovieForm'
 
 class MovieEdit extends Component {
-    state = {
-        isModalOpen:'',
+    
+    componentDidMount () {
+        this.props.clearCreateValues()
     }
-    componentDidUpdate(pP, pS, sS) {
-        // this.checkCreateStatus()
-        console.log('pP', pP)
-        console.log('editRes', this.props.editRes)
-        //console.log(this.props.editRes.movie.id)
-        // if (pP.editRes.movie.id !== this.props.editRes.movie.id) {
-        //         this.setState({isModalOpen:true})
-        //     }
-    }
-    renderEditAction(){
-        return (<React.Fragment>
-            <Link to={'/'} onClick={() => this.setState({isModalOpen:''})} className="ui active button">Return Home</Link>
-            <Link to={'/movies/new'} onClick={() => this.setState({isModalOpen:''})} className="ui active button">Create New</Link>
-        </React.Fragment>)
-    }
-    checkEditStatus () {
-        const {isModalOpen} = this.state
-        console.log('isModalOpen', isModalOpen)
-        if (isModalOpen === true) {
-            console.log('true')
-            return (
-                    <Modal
-                        content={<h1  >Successfully Edited</h1>}
-                        actions={this.renderEditAction()}
-                        submitButton='Update'
-                    />
-            )
-        } if (isModalOpen === false) {
-            console.log('false')
-            return (
-                <Modal
-                    content={<h1>There's been an error. Try again!</h1>}
-                    actions={<Link to={'/movies/new'} className="ui active button">Return Home</Link>}
-                />)
-        }
-    }
+
 
 
     onSubmit = (formValues) => {
-        const { history, movie, uploadedImgUrl } = this.props
-        console.log('onSubmit this', this)
-        this.props.editMovie(formValues, history, movie);
-        console.log('formValues', formValues)
+        const { uploadedImgUrl, imageMetadata } = this.props.movieImage
+        const { movie, history } = this.props
+        //console.log('onSubmit formValues', formValues)
+        
+        //to check if user upload a new image
+        //to prevent deleting image from storage if user uploads exact the same image
+        if(uploadedImgUrl && uploadedImgUrl !== movie.image.imageUrl){
+            //console.log('uploadedImgUrl', uploadedImgUrl)
+            const image = {
+                imageUrl:uploadedImgUrl,
+                imageName:imageMetadata.name,
+                imageSize:imageMetadata.size,
+                imageType:imageMetadata.type,
+            }
+            this.props.deleteMovieImage(movie)
+            this.props.editMovie({...formValues, image}, movie, history);
+            //console.log('formValues', {...formValues, image})
+            
+
+        }else{
+            this.props.editMovie(formValues, movie, history)
+            //console.log('formValues', formValues)
+        }
+
     }
 
 
@@ -64,15 +50,21 @@ class MovieEdit extends Component {
             return <Loader />
         }else 
         return (
-            <MovieForm 
-            onSubmit={this.onSubmit}
-            initialValues={_.pickBy(this.props.movie)}
-            initialImgSrc={this.props.movie.image.imageUrl}
-            />
+            <React.Fragment>
+                <div className="ui yellow center aligned segment">
+                    <h1 className="header">{`Edit Movie: ${this.props.movie.title}`} </h1>
+                </div>
+                <MovieForm 
+                onSubmit={this.onSubmit}
+                initialValues={_.pickBy(this.props.movie)}
+                initialImgSrc={this.props.movie.image.imageUrl}
+                submitButtonName='Update this Movie'
+                />
+            </React.Fragment>
         )
     }
     render() {
-        console.log('edit props', this.props)
+        //console.log('edit props', this.props)
         return (
             <div>
                 {/* {this.checkEditStatus()} */}
@@ -83,17 +75,16 @@ class MovieEdit extends Component {
 
 }
 const mapStateToProps = (state, ownProps) => {
-    console.log('state:', state)
+    //console.log('state:', state)
     const movies = _.mapKeys(state.firestore.ordered.cinema, 'id')
     return ({
         movie: movies[ownProps.match.params.id],
-        editRes: state.movie,
-        uploadedImgUrl:state.movieImage.uploadedImgUrl,
+        movieImage:state.movieImage,
     })
 }
 
 export default compose(
-    connect(mapStateToProps, {editMovie}),
+    connect(mapStateToProps, {editMovie, clearCreateValues, deleteMovieImage}),
     firestoreConnect([
         { collection: 'cinema' }
     ])

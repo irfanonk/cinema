@@ -11,6 +11,8 @@ import {   ReactReduxFirebaseProvider, getFirebase } from 'react-redux-firebase'
 import fbConfig from './apis/fbConfig';
 import firebase from 'firebase/app'
 
+import './index.css'
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, 
   composeEnhancers(
@@ -25,8 +27,8 @@ const store = createStore(reducers,
       dispatch: store.dispatch,
       createFirestoreInstance
   }
-  
 ReactDOM.render(
+  
   <Provider store ={store}>
     <ReactReduxFirebaseProvider {...rrfProps}>
       <App />

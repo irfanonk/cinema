@@ -43,23 +43,22 @@ class Header extends React.Component{
 
     
     return (
-            <div>
-                <div className="ui inverted segment">
-                    <div className="ui inverted secondary pointing menu">
+                <div className="ui green  segment" style={{margin:'20px 0px 20px 0px', textAlign:'center'}} >  
+                    <div className="ui stackable tabular menu" >
+                        <h1 style={{marginRight:'25px'}} >CINEMA</h1>
                         <NavLink to={"/"} exact  className="item">
-                            Home
+                        <i className="home icon"></i> Home
                         </NavLink>
                         <NavLink to={"/movies/new"}  exact className="item">
-                            Add Movie
+                        <i className="add icon"></i>Add Movie
                         </NavLink>
                         <NavLink to={"/movies/search"}  exact className="item">
-                            Search Movie
+                        <i className="search icon"></i>Search Movie
                         </NavLink>
                         <div className="right menu">
                         <GoogleAuth />
                         </div>
                     </div>
-                </div>
             </div>
     )
     }

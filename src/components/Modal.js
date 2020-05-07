@@ -7,8 +7,12 @@ import ReactDOM from 'react-dom';
 
 
 const Modal = props => {
-     console.log('modal')
+     console.log('modal', props)
 
+    const {fbPageY} = props
+    console.log('modal page', window)
+    console.log('fbPageY', fbPageY)
+    
         return  ReactDOM.createPortal(
             //history.push we reroute user to main path
             //when user clicks (onClick) outside the modal
@@ -16,9 +20,9 @@ const Modal = props => {
             //stopPropagation prevent this.
             <div 
             onClick={props.onDismiss} 
-            className="ui dimmer modals visible active" >
+            className="ui dimmer modals visible active" style={{marginTop:`${fbPageY}` - 450 + 'px'}} >
                 <div onClick={(e) => e.stopPropagation()} 
-                className="ui standard modal visible active" style={{textAlign:'center'}}>
+                className="ui standard modal visible active" style={{textAlign:'center',}}>
                     <div className="header">{props.title}</div>
                     <div className="content">{props.content}</div>
                     <div className="actions">

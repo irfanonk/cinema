@@ -10,22 +10,22 @@ import MovieEdit from './MovieEdit';
 
 function App() {
   return (
-      <div className="ui container">
+    <React.Fragment>
         <BrowserRouter>
-          <div className="ui row">
-          <Route component={Header} />
-          </div>
-          <Switch>
-            <Route path="/" exact component={MoviesList} />
-            <Route path="/movies/new"  component={MovieCreate} /> 
-            <Route path="/movies/delete/:id"  component={MovieDelete} />
-            <Route path="/movies/edit/:id"  component={MovieEdit} />
-            <Route path="/movies/search" component={MovieSearch} />
-            <Route path="/movies/:id" component={MovieCard} />
-            
-          </Switch>
+          <Header />
+          <div className="ui container">
+            <Switch>
+              <Route path="/" exact component={MoviesList} />
+              <Route path="/movies/new"  component={MovieCreate} /> 
+              <Route path="/movies/delete/:id"  component={MovieDelete} />
+              <Route path="/movies/edit/:id"  component={MovieEdit} />
+              <Route path="/movies/search" component={MovieSearch} />
+              <Route path="/movies/:id" component={MovieCard} />
+            </Switch>
+            </div>
         </BrowserRouter>
-      </div>
+      
+      </React.Fragment>
   );
 }
 export default App;

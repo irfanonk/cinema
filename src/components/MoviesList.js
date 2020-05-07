@@ -50,21 +50,25 @@ class MoviesList extends Component {
     renderList(firestoreMovies) {
         //console.log('movies:', movies)
         return firestoreMovies.map(movie => {
-            const { id, title, duration, year, createdBy, image } = movie
+            const { id, title, duration, year, createdBy, image ,genre } = movie
             return (
                 <div className="column" key={id}>
                     <div className="ui fluid card"  >
                         <Link to={`/movies/${id}`}  className="ui large image" style={{borderStyle:'outset', maxHeight:'80%'}}>
-                                <img src={image.imageUrl} alt={title}   />
+                            <div className="floating ui blue label">
+                                {year}
+                            </div>
+                                <img src={image.imageUrl} alt={title} />
                         </Link>
+                        {title}
                         <div className="center aligned content">
                             <span >{duration} |</span>
-                            <span >{year}</span>
+                            <span >{genre}</span>
                         </div>
                         <div className="center aligned content">
                             <h3 className="meta"> Added by:</h3> 
-                            <div >
-                                <img className="ui avatar image" src={createdBy.imageUrl} alt='' />{movie.createdBy.userName}
+                            <div className="ui image label">
+                                <img  src={createdBy.imageUrl} alt='no image' />{movie.createdBy.userName}
                             </div>
                         </div>
                         <div className="center aligned content">
@@ -87,13 +91,17 @@ class MoviesList extends Component {
         //console.log('newMovies:', newMovies)
         return (
             <div>
-                <h1>Movies on Show</h1>
+                <div className="ui red center aligned segment">
+                    <h1 className="header">All Movies </h1>
+                </div>
                 {!firestoreMovies ?
                     <div><Loader /></div>
                     :
 
-                    <div className="ui stackable five column grid">
+                    <div className="ui grid">
+                        <div className="doubling four column row">
                         {this.renderList(firestoreMovies)}
+                    </div>
                     </div>
                 }
             </div>

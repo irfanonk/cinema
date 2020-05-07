@@ -17,7 +17,8 @@ const config = {
   firebase.initializeApp(config)
   firebase.firestore()
   const storage = firebase.storage();
-  
+  console.log('firebase', firebase)
+  console.log('firebase', firebase.auth)
   export  {
     storage, firebase as default
   }  
