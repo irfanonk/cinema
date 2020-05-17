@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Field, reduxForm} from 'redux-form';
 import { connect } from 'react-redux';
 import { compose } from 'redux'
-import MovieImageCreate from './MovieImageCreate';
+import ImageCreate from './ImageCreate';
 import FieldFileInput from './FieldFileInput';
 
 class MovieForm extends Component {
@@ -38,9 +38,9 @@ class MovieForm extends Component {
     }
     
     onClick = (e) => {
-        this.setState({fbPageY:e.pageY})
+        this.props.pageY(e.pageY)
         //console.log('form nativeEvent', e.nativeEvent)
-        // console.log('onButtonClick', e.screenX)
+        console.log('pageY', e.pageY)
         // console.log('onButtonClick', e.screenY)
         
     }
@@ -49,7 +49,7 @@ class MovieForm extends Component {
        //console.log("form porps:", this.props)
         return (
             <div className="ui centered grid">
-                <MovieImageCreate label="Image" initialImgSrc={this.props.initialImgSrc}/>
+                <ImageCreate storageName='images' label="Image" initialImgSrc={this.props.initialImgSrc}/>
                 <div className="ten wide center aligned column" >
                     <form  
                     className="ui form error"
@@ -103,7 +103,7 @@ const validate = v => {
 const mapStateToProps = (state) => {
     //console.log('state:', state)
     return ({
-        isSignedIn:state.googleAuth.isSignedIn,
+        isSignedIn:state.auth.isSignedIn,
     })
 }
 

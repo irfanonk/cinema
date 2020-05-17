@@ -11,14 +11,14 @@ const config = {
     storageBucket: "cinemadb-9769b.appspot.com",
     messagingSenderId: "598837625211",
     appId: "1:598837625211:web:2e90cf7fec47e4eae9bdde",
-    measurementId: "G-QCWH4TCFGM"
+    measurementId: "G-QCWH4TCFGM",
   };
 
   firebase.initializeApp(config)
   firebase.firestore()
   const storage = firebase.storage();
-  console.log('firebase', firebase)
-  console.log('firebase', firebase.auth)
+  // console.log('firebase', firebase)
+  // console.log('firebase', firebase.auth)
   export  {
     storage, firebase as default
   }  

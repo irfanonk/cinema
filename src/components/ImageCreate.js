@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { createMovieImage, uploadMovieImage, deleteMovieImage, clearCreateValues } from '../store/actions/moviesActions';
+import { createImage, uploadImage, deleteImage, clearCreateValues } from '../store/actions/moviesActions';
 
- class MovieImageCreate extends Component {
+ class ImageCreate extends Component {
 
     state = {
         creImgChng : false, //to see if selected image changes
     }
 
     componentDidUpdate(pP) {
-        if(pP.movieImage.deleteImg !== this.props.movieImage.deleteImg) {
+        if(pP.image.deleteImg !== this.props.image.deleteImg) {
             setTimeout(() => {
                 this.props.clearCreateValues()
             }, 2500);
-        }else if(pP.movieImage.createdImage.imgPrevUrl !== this.props.movieImage.createdImage.imgPrevUrl) {
+        }else if(pP.image.createdImage.imgPrevUrl !== this.props.image.createdImage.imgPrevUrl) {
             this.setState({creImgChng :true})
         }
 
@@ -22,23 +22,26 @@ import { createMovieImage, uploadMovieImage, deleteMovieImage, clearCreateValues
 
     onChange =(e) =>{
         if(e.target.files[0]){
-            this.props.createMovieImage(e.target.files[0])
+            this.props.createImage(e.target.files[0])
         }
     }
     
     onUploadClick = () => {
-        this.props.uploadMovieImage()
+        const {image, storageName }= this.props;
+        const imageName = image.createdImage.name
+
+        this.props.uploadImage(storageName, imageName)
     }
 
     onDeleteClick = () => {
-        this.props.deleteMovieImage(this.props.movieImage.imageMetadata.name)
+        this.props.ge(this.props.image.imageMetadata.name)
     }
 
     render() {
-        const {label, createdImage,  uploadImgPercent, uploadedImgUrl, uploadError, deleteImg, deleteImgError, imageMetadata} = this.props.movieImage
+        const {label, createdImage,  uploadImgPercent, uploadedImgUrl, uploadError, deleteImg, deleteImgError, imageMetadata} = this.props.image
         const noImagePreview = "https://firebasestorage.googleapis.com/v0/b/cinemadb-9769b.appspot.com/o/images%2FNoImage_Available.png?alt=media&token=55c13d9f-0f7c-4b79-88d1-d9112b3c1ba0"
         const { creImgChng } = this.state
-        //console.log('MovieImageCreate', this)
+        console.log('ImageCreate', this.props)
         const imageSrc 
             = this.props.initialImgSrc && !createdImage.imgPrevUrl ? this.props.initialImgSrc 
             : !this.props.initialImgSrc && createdImage.imgPrevUrl ? createdImage.imgPrevUrl 
@@ -59,7 +62,7 @@ import { createMovieImage, uploadMovieImage, deleteMovieImage, clearCreateValues
                     </div >
                     <div className="sixteen wide column row">
                         <div className="five wide column">
-                            <h3>Selected Image Preview</h3>
+                            <h3>Image Preview</h3>
                             <img 
                             className="ui medium image"
                             src={imageSrc} 
@@ -94,7 +97,7 @@ import { createMovieImage, uploadMovieImage, deleteMovieImage, clearCreateValues
                             </button>
                         </div>
                         <div className="five wide column">
-                            <h3>Uploaded Image Preview</h3>
+                            <h3>Uploaded Image</h3>
                             <img 
                             className="ui medium image"
                             src={uploadedImgUrl ? uploadedImgUrl : noImagePreview} 
@@ -116,12 +119,12 @@ import { createMovieImage, uploadMovieImage, deleteMovieImage, clearCreateValues
 const mapStateToProps = (state) => {
     //console.log('state', state)
     return {
-        movieImage:state.movieImage,
+        image:state.image,
     }
 }
 
 export default connect(
     mapStateToProps, 
-    {createMovieImage, uploadMovieImage, deleteMovieImage, clearCreateValues},
+    {createImage, uploadImage, deleteImage, clearCreateValues},
     )
-    (MovieImageCreate);
+    (ImageCreate);

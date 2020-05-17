@@ -3,15 +3,15 @@ import {
     CREATE_MOVIE_FAILED,
     FETCH_MOVIES, 
     FETCH_MOVIE,
-    CREATE_MOVIE_IMAGE,
+    CREATE_IMAGE,
     DELETE_MOVIE_SUCCESS,
     DELETE_MOVIE_FAILED,
     EDIT_MOVIE_SUCCESS,
     EDIT_MOVIE_FAILED,
-    UPLOAD_MOVIE_IMAGE,
+    UPLOAD_IMAGE,
     UPLOAD_IMAGE_PROGRESS,
     UPLOAD_IMAGE_ERROR,
-    UPLOAD_MOVIE_IMAGE_METADATA,
+    UPLOAD_IMAGE_METADATA,
     DELETE_IMAGE_SUCCESS,
     DELETE_IMAGE_FAILED,
     CLEAR_CREATE_VALUES,
@@ -19,15 +19,11 @@ import {
 } from './types';
 import { storage } from '../../apis/fbConfig';
 
-    export const uploadMovieImage = () => (dispatch, getState) => {
-   // console.log( 'uploadMovieImage invoked')
-    const {createdImage} = getState().movieImage;
-    // const metadata = {
-    //     contentType:createdImage.type,
-    //     lastModifiedDate:createdImage.lastModifiedDate,
-    //     imageName:createdImage.name
-    // }
-    const uploadTask =  storage.ref(`images/${createdImage.name}`).put(createdImage)
+    export const uploadImage = (storageName, imageName) => (dispatch, getState) => {
+   console.log( 'uploadImage invoked', storageName + '/' + imageName)
+   
+    const createdImage = getState().image.createdImage
+    const uploadTask =  storage.ref(storageName + '/' + imageName).put(createdImage)
     console.log('uploadTask', uploadTask)
     uploadTask.on('state_changed',
     (snapshot) =>{
@@ -37,25 +33,25 @@ import { storage } from '../../apis/fbConfig';
     },
     (error) => {
         dispatch({type:UPLOAD_IMAGE_ERROR, payload:error})
-        console.log('upload image error', error)
+        //console.log('upload image error', error)
     },
     () => {
-    storage.ref('images').child(createdImage.name).getDownloadURL().then((url) => {
-        dispatch({type:UPLOAD_MOVIE_IMAGE, payload:url})
-        //console.log('uploadMovieImage', url)
+    storage.ref(storageName).child(imageName).getDownloadURL().then((url) => {
+        dispatch({type:UPLOAD_IMAGE, payload:url})
+        console.log('uploadImage', url)
     })
 
-    storage.ref('images').child(createdImage.name).getMetadata().then((metadata) =>{
-        dispatch({type:UPLOAD_MOVIE_IMAGE_METADATA, payload:metadata})
-        console.log('metadata', metadata)
+    storage.ref(storageName).child(imageName).getMetadata().then((metadata) =>{
+        dispatch({type:UPLOAD_IMAGE_METADATA, payload:metadata})
+       console.log('metadata', metadata)
     })
     
     })
     
 }
 
-export const deleteMovieImage = (imageName) => (dispatch, getState) => {
-    //console.log('deleteMovieImage movie', movie)
+export const deleteImage = (imageName) => (dispatch, getState) => {
+    //console.log('ge movie', movie)
 
     storage.ref('images').child(`${imageName}`).delete().then((response) =>{
         dispatch({type:DELETE_IMAGE_SUCCESS})
@@ -69,18 +65,12 @@ export const deleteMovieImage = (imageName) => (dispatch, getState) => {
 export const createMovie = (formValues) =>  async (dispatch, getState, {getFirestore}) => {
     //console.log('createMovie fromValues', formValues)
     const firestore = getFirestore();
-    const currentUserProfile = getState().googleAuth.response.currentUser.get().getBasicProfile();
-    const userProfile = {
-        userId:currentUserProfile.getId(),
-        userName:currentUserProfile.getName(),
-        userEmail:currentUserProfile.getEmail(),
-        imageUrl:currentUserProfile.getImageUrl(),    
-    };
+    const movieName= formValues.title.replace(/\s/g, "")
     firestore.add(
         {collection :'cinema' },
         {
         ...formValues,
-        createdBy: userProfile,                
+        movieName,               
         createdAt: new Date(),
     }).then((response) => {
         dispatch ( { type: CREATE_MOVIE_SUCCESS, payload:response })
@@ -97,10 +87,10 @@ export const createMovie = (formValues) =>  async (dispatch, getState, {getFires
 // }
 
 //to use image as a blob for preview
-export const createMovieImage = (image) => async dispatch =>{
-    console.log('createMovieImage', dispatch)
+export const createImage = (image) => async dispatch =>{
+    console.log('createImage', dispatch)
     image.imgPrevUrl = await URL.createObjectURL(image)
-    dispatch({type:CREATE_MOVIE_IMAGE, payload:image})
+    dispatch({type:CREATE_IMAGE, payload:image})
 }
 
 export const deleteMovie = (movie, history) => (dispatch, getState, {getFirestore}) => {
@@ -112,7 +102,7 @@ export const deleteMovie = (movie, history) => (dispatch, getState, {getFirestor
     }).catch((error) => {
         dispatch({type:DELETE_MOVIE_FAILED, payload:error})
     });
-    dispatch(deleteMovieImage(movie.image.imageName))
+    dispatch(deleteImage(movie.image.imageName))
     history.push('/')
 }
 
@@ -123,9 +113,11 @@ export const editMovie = (formValues, movie, history) => (dispatch, getState, {g
     // console.log('edit form history', history)
 
     const firestore = getFirestore();
+    const movieName= formValues.title.replace(/\s/g, "")
      firestore.update({ collection: 'cinema', doc:`${movie.id}`},
         {
         ...formValues,
+        movieName,
         updateddAt: new Date(),
 
         }  
@@ -136,6 +128,8 @@ export const editMovie = (formValues, movie, history) => (dispatch, getState, {g
     });
     history.push('/')
 }
+
+
 
 export const clearCreateValues = () => {
     //console.log('clearCreateValues invoked')

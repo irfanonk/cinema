@@ -118,10 +118,10 @@ class MovieCard extends Component {
 const mapStateToProps = (state, ownProps) =>{
     // console.log('state:', state.firestore.ordered.cinema)
     // console.log('ownProps:', ownProps)
-    const movies = _.mapKeys(state.firestore.ordered.cinema, 'id')
+    const movies = _.mapKeys(state.firestore.ordered.cinema, 'movieName')
     // console.log('movies:', movies)
     return {
-        movie:movies[ownProps.match.params.id]
+        movie:movies[ownProps.match.params.movieName]
     }
 }
 

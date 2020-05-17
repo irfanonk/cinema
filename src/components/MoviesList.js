@@ -9,25 +9,28 @@ import { storage } from '../apis/fbConfig';
 
 class MoviesList extends Component {
 
-    componentDidMount() {
 
-    }
+    renderAdmin(registeredUserId, movieName) {
+        const { signRes, isSignedIn, isLoggedIn } = this.props.auth
+        const { uid, isEmpty } = this.props.emailAuth.auth
+        
+        // console.log('isEmpty', this.props.emailAuth)
+        // console.log('movielist uid', uid)
+        
+        if (isSignedIn || !isEmpty) {
 
-
-    renderAdmin(registeredUserId, id) {
-        const { response, isSignedIn } = this.props
-        // console.log('id', id)
-        // console.log('this.props', this.props)
-        if (isSignedIn) {
-            const currentUserId = response.currentUser.get().getBasicProfile().getId()
-            //console.log('currentUserId', currentUserId)
-            if (currentUserId === registeredUserId) {
+            const currentUserId = isSignedIn ?  
+            signRes.currentUser.get().getBasicProfile().getId()
+            : uid;
+            
+            console.log('currentUserId', currentUserId)
+            if (currentUserId === registeredUserId  ) {
                 return (
                     <React.Fragment>
-                        <Link to={`/movies/edit/${id}`} className="circular ui icon purple button">
+                        <Link to={`/movies/edit/${movieName}`} className="circular ui icon purple button">
                             <i className="edit icon"></i>
                     </Link>
-                    <Link to={`/movies/delete/${id}`} className="circular ui icon red button">
+                    <Link to={`/movies/delete/${movieName}`} className="circular ui icon red button">
                             <i className="trash icon"></i>
                     </Link>
                     </React.Fragment>
@@ -50,11 +53,11 @@ class MoviesList extends Component {
     renderList(firestoreMovies) {
         //console.log('movies:', movies)
         return firestoreMovies.map(movie => {
-            const { id, title, duration, year, createdBy, image ,genre } = movie
+            const { id, title, duration, year, createdBy, image ,genre, movieName } = movie
             return (
                 <div className="column" key={id}>
                     <div className="ui fluid card"  >
-                        <Link to={`/movies/${id}`}  className="ui large image" style={{borderStyle:'outset', maxHeight:'80%'}}>
+                        <Link to={`/movies/${movieName}`}  className="ui large image" style={{borderStyle:'outset', maxHeight:'80%'}}>
                             <div className="floating ui blue label">
                                 {year}
                             </div>
@@ -72,7 +75,7 @@ class MoviesList extends Component {
                             </div>
                         </div>
                         <div className="center aligned content">
-                            {this.renderAdmin(createdBy.userId, id)}
+                            {this.renderAdmin(createdBy.userId, movieName)}
                         </div>
                     </div>
                 </div>
@@ -85,10 +88,8 @@ class MoviesList extends Component {
 
     render() {
         const { movies, firestoreMovies } = this.props
-        // console.log('movies:', movies)
         //console.log('firestoreMovies:', firestoreMovies)
-        //const newMovies= !firestoreMovies ? movies : movies.concat(firestoreMovies)
-        //console.log('newMovies:', newMovies)
+        console.log('movielist :', this.props)
         return (
             <div>
                 <div className="ui red center aligned segment">
@@ -112,17 +113,18 @@ class MoviesList extends Component {
 }
 
 const mapStateToProps = (state) => {
-    //console.log('state:', state)
+    console.log('state:', state)
     return ({
         firestoreMovies: state.firestore.ordered.cinema,
-        isSignedIn: state.googleAuth.isSignedIn,
-        response: state.googleAuth.response,
+        auth:state.auth,
+        emailAuth:state.firebase,
     })
 }
 
 export default compose(
     connect(mapStateToProps, { }),
     firestoreConnect([
-        { collection: 'cinema' }
+        { collection: 'cinema' },
+        { collection: 'users' }
     ])
 )(MoviesList) 

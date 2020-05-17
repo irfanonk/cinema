@@ -12,23 +12,33 @@ import fbConfig from './apis/fbConfig';
 import firebase from 'firebase/app'
 
 import './index.css'
+import { reduxForm } from 'redux-form';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
+
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ 
+    trace: true, 
+    traceLimit: 25 
+}) || compose; 
 const store = createStore(reducers, 
   composeEnhancers(
     applyMiddleware(reduxThunk.withExtraArgument({ getFirebase, getFirestore }) ),
     reduxFirestore(fbConfig),
+
     ),
     )
-
+  const rrfConfig = {
+    userProfile: 'users',
+    useFirestoreForProfile: true, // Firestore for Profile instead of Realtime DB
+    attachAuthIsReady:true,
+  }
   const rrfProps = {
       firebase,
-      config: fbConfig,
+      config: rrfConfig,
       dispatch: store.dispatch,
-      createFirestoreInstance
+      createFirestoreInstance,
   }
 ReactDOM.render(
-  
   <Provider store ={store}>
     <ReactReduxFirebaseProvider {...rrfProps}>
       <App />

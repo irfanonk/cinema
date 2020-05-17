@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createMovie, fetchMovies, clearCreateValues } from '../store/actions/moviesActions';
+import {  } from '../store/actions/authActions';
 import {reset} from 'redux-form';
 import MovieForm from './MovieForm';
-import GoogleAuth from '../components/GoogleAuth';
+import GoogleAuth from './auth/GoogleAuth';
 import Modal from './Modal';
 
 
@@ -16,7 +17,7 @@ class MovieCreate extends Component {
     }
 
     // componentDidMount () {
-    //     this.props.clearCreateValues()
+        
     // }
 
     componentDidUpdate(pP, pS, sS) {
@@ -66,10 +67,33 @@ class MovieCreate extends Component {
         )
     }
 
+    renderUserProfile(){
+        const { auth, emailAuth } = this.props
+        let userPofile ={};
+        if(auth.isSignedIn){
+            const currentUserProfile = auth.signRes.currentUser.get().getBasicProfile();
+            userPofile = {
+                userId:currentUserProfile.getId(),
+                userName:currentUserProfile.getName(),
+                userEmail:currentUserProfile.getEmail(),
+                imageUrl:currentUserProfile.getImageUrl(),    
+            }
+        }else if(!emailAuth.auth.isEmpty){
+            userPofile = {
+                userId:emailAuth.profile.userId,
+                userName:emailAuth.profile.userName,
+                userEmail:emailAuth.profile.userEmail,
+                imageUrl:emailAuth.profile.userPhotoUrl,    
+            }
+        }return userPofile
+    }
 
     onSubmit = (formValues) => {
-        const { history, uploadedImgUrl,imageMetadata } = this.props.movieImage
-        console.log('onSubmit this', this)
+        
+        //console.log('onSubmit this', this)
+        const createdBy = this.renderUserProfile()
+        console.log('createdBy', createdBy)
+        const { uploadedImgUrl,imageMetadata,auth } = this.props.image
         const image = {
             imageUrl:uploadedImgUrl,
             imageName:imageMetadata.name,
@@ -77,13 +101,13 @@ class MovieCreate extends Component {
             imageType:imageMetadata.contentType,
         }
 
-        this.props.createMovie({...formValues, image },);
+        this.props.createMovie({...formValues, image, createdBy },);
         //console.log('formValues', formValues)
     }
 
     checkSignStatus() {
-        const { isSignedIn } = this.props
-        if (isSignedIn === true) {
+        const { auth, emailAuth } = this.props
+        if (auth.isSignedIn || !emailAuth.isEmpty) {
             return (
                 <React.Fragment>
                     <div className="ui orange center aligned segment">
@@ -96,20 +120,16 @@ class MovieCreate extends Component {
                     />
                 </React.Fragment>
             )
-        } else if (isSignedIn === false) {
+        } else if (!auth.isSignedIn && emailAuth.isEmpty) {
             return (
                 <div style={{ textAlign: 'center' }}>
                     <div className="ui icon message" style={{ marginTop: "100px" }} >
                         <i className="film icon"></i>
                         <div className="content">
                             <div className="header">
-                                <h3>Do you want to add your movie?</h3>
                             </div>
-                            <h1>Please sign in to add movies</h1>
+                            <h1>Please sign/log in to add movies</h1>
                         </div>
-                    </div>
-                    <div className="content"  >
-                        < GoogleAuth />
                     </div>
                 </div>
             )
@@ -146,14 +166,16 @@ class MovieCreate extends Component {
 
     render() {
         //console.log('MovieCreate props', this.props)
-        // console.log('MovieCreate props', this.state)
+        //console.log('MovieCreate props', this.state)
         return (
             
             <div>
                 <button onClick={this.onDenemeClick} >deneme 1</button>
                 <button onClick={this.onDenemeClick} >deneme 2</button>
+
                 {this.checkCreateStatus()}
                 {this.checkSignStatus()}
+
                 <button onClick={this.onDenemeClick} >deneme</button>
             </div>
 
@@ -163,13 +185,14 @@ class MovieCreate extends Component {
 }
 
 const mapStateToProps = (state) => {
-    //console.log('state:', state)
+    console.log('state:', state)
     // console.log('movie id:', state.movie.id)
     
     return ({
-        isSignedIn: state.googleAuth.isSignedIn,
+        auth: state.auth,
+        emailAuth:state.firebase,
         createRes: state.movie,
-        movieImage:state.movieImage,
+        image:state.image,
         
     })
 }
@@ -177,4 +200,4 @@ const mapStateToProps = (state) => {
 
 
 
-export default connect(mapStateToProps, { createMovie, clearCreateValues, reset })(MovieCreate);
+export default connect(mapStateToProps, { createMovie, clearCreateValues,reset })(MovieCreate);

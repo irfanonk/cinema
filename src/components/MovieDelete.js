@@ -51,9 +51,9 @@ class MovieDelete extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     console.log('state:', state)
-    const movies = _.mapKeys(state.firestore.ordered.cinema, 'id')
+    const movies = _.mapKeys(state.firestore.ordered.cinema, 'movieName')
     return ({
-        movie: movies[ownProps.match.params.id],
+        movie: movies[ownProps.match.params.movieName],
         isDeleteOk:state.movie.isDeleteOk,
     })
 }

@@ -6,7 +6,7 @@ import axios from 'axios';
     //from ResourceList() into useResources()
     //by extracting this logic into a seperate funct.
     //we can use it in another component with another
-    const UploadMovieImage = image => {
+    const UploadImage = image => {
         const [downloadUrl, setDownloadUrl] = useState('')
         //console.log('resource', resource)
         const getUrl =  (image) => {
@@ -30,4 +30,4 @@ import axios from 'axios';
         return downloadUrl;
     }
 
-    export default  UploadMovieImage;
+    export default  UploadImage;

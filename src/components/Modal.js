@@ -7,11 +7,10 @@ import ReactDOM from 'react-dom';
 
 
 const Modal = props => {
-     console.log('modal', props)
-
+    
+    console.log('modal', props)
     const {fbPageY} = props
-    console.log('modal page', window)
-    console.log('fbPageY', fbPageY)
+
     
         return  ReactDOM.createPortal(
             //history.push we reroute user to main path
