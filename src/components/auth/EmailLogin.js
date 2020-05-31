@@ -13,7 +13,7 @@ class EmailLogin extends Component {
         const { auth, history } =this.props
         if(pP.auth.isSignedIn != this.props.auth.isSignedIn){
             console.log('signIn status Changed')
-            history.push('/')
+            //history.push('/')
         }
     }
 
@@ -25,7 +25,7 @@ class EmailLogin extends Component {
         <div className={fieldclassName}>
             <label >{label}</label>
             <input {...input} autoComplete="off"  />
-            {meta.touched && meta.error && <span> {meta.error}</span>}
+            {meta.touched && meta.error && <span className="ui pointing label"> {meta.error}</span>}
             
         </div>        
         )
@@ -60,9 +60,13 @@ class EmailLogin extends Component {
                         {this.renderLogin}
                         <button type="submit"  className="ui button primary"><i className="paper plane icon"></i>Submit</button>     
                         </form>
-                        
                     </div>
                 </div>
+                {auth.logRes.message ?
+                <div className="ui pointing label">
+                    {auth.logRes.message}
+                </div>
+                : null }
             </div>
 
             

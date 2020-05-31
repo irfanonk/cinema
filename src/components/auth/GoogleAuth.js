@@ -16,18 +16,18 @@ class GoogleAuth extends React.Component {
                 this.response = response
                 //console.log('this.response', this.response)
                 this.isSignedIn = this.response.isSignedIn.get()
-                this.onAuthChange(this.isSignedIn)
-                this.response.isSignedIn.listen(this.onAuthChange)
+                this.onChange(this.isSignedIn)
+                this.response.isSignedIn.listen(this.onChange)
                 
             })
         })
     }
    
-    onAuthChange = (isSignedIn) => {
+    onChange = (isSignedIn) => {
         if(isSignedIn){
             this.props.signIn(this.response)
         } else {
-            this.props.signOut(this.response)
+            this.props.signOut()
         }
     }
 
@@ -43,16 +43,18 @@ class GoogleAuth extends React.Component {
         //console.log(this.props)
         if (this.props.isSignedIn){
             return (
-            <div onClick={this.onSignOutClick} >
-                <i className="google icon" />
-                Sign Out
-            </div>    
+            <button 
+            className="ui red button" data-tooltip="Sign Out" data-position="bottom center"
+            onClick={this.onSignOutClick} >
+                <i className="google icon" />Out
+            </button>    
             )
         }else {
             return (
-                <button onClick={this.onSignInClick} >
-                <i className="google icon" />
-                Sign In
+            <button 
+            className="ui red button" data-tooltip="Sign In" data-position="bottom center"
+            onClick={this.onSignInClick} >
+                <i className="google icon" />In
             </button> 
             )
         }
@@ -60,7 +62,7 @@ class GoogleAuth extends React.Component {
 
     render() {        
         return (
-            <div>{this.renderAuthButton()}</div>
+            <React.Fragment>{this.renderAuthButton()}</React.Fragment>
         )
     }
     }

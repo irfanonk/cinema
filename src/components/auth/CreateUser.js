@@ -14,7 +14,7 @@ class CreateUser extends Component {
         const { auth, history } =this.props
         if(pP.auth.isSignedIn != this.props.auth.isSignedIn){
             console.log('signIn status Changed')
-            history.push('/')
+            //history.push('/')
         }
     }
 

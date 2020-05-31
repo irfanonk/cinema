@@ -18,7 +18,6 @@ const INITIAL_STATE = {
     signRes:[],
     logRes:[],
     userCreateRes:[],
-    getUserRes:[],
 }
 
 export default  (state= INITIAL_STATE, action) => {
@@ -39,10 +38,7 @@ export default  (state= INITIAL_STATE, action) => {
             return {...state, isLogedIn:true, isSignedIn:false, userCreateRes:action.payload}
         case CREATE_USER_INFO_FAILED:
             return {...state, isLogedIn:false, userCreateRes:action.payload}
-        case GET_USER_INFO_SUCCESS:
-            return {...state, getUserRes:action.payload}
-        case GET_USER_INFO_FAILED:
-            return {...state, getUserRes:action.payload}
+
             default:
             return state;
 

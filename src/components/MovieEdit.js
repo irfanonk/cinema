@@ -6,7 +6,7 @@ import { compose } from 'redux'
 import { editMovie, clearCreateValues, deleteImage} from '../store/actions/moviesActions';
 import _ from 'lodash'
 import Modal from './Modal';
-import Loader from './Loader'
+import Loader from './layout/Loader'
 import MovieForm from './MovieForm'
 
 class MovieEdit extends Component {

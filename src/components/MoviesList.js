@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux'
 import { Link } from 'react-router-dom';
-import Loader from './Loader';
+import Loader from './layout/Loader';
 import Modal from './Modal';
 import { storage } from '../apis/fbConfig';
 
@@ -23,7 +23,7 @@ class MoviesList extends Component {
             signRes.currentUser.get().getBasicProfile().getId()
             : uid;
             
-            console.log('currentUserId', currentUserId)
+            //console.log('currentUserId', currentUserId)
             if (currentUserId === registeredUserId  ) {
                 return (
                     <React.Fragment>
@@ -89,7 +89,7 @@ class MoviesList extends Component {
     render() {
         const { movies, firestoreMovies } = this.props
         //console.log('firestoreMovies:', firestoreMovies)
-        console.log('movielist :', this.props)
+        //console.log('movielist :', this.props)
         return (
             <div>
                 <div className="ui red center aligned segment">

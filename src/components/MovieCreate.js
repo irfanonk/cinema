@@ -107,7 +107,7 @@ class MovieCreate extends Component {
 
     checkSignStatus() {
         const { auth, emailAuth } = this.props
-        if (auth.isSignedIn || !emailAuth.isEmpty) {
+        if (auth.isSignedIn || !emailAuth.auth.isEmpty) {
             return (
                 <React.Fragment>
                     <div className="ui orange center aligned segment">
@@ -120,7 +120,7 @@ class MovieCreate extends Component {
                     />
                 </React.Fragment>
             )
-        } else if (!auth.isSignedIn && emailAuth.isEmpty) {
+        } else if (!auth.isSignedIn && emailAuth.auth.isEmpty) {
             return (
                 <div style={{ textAlign: 'center' }}>
                     <div className="ui icon message" style={{ marginTop: "100px" }} >
