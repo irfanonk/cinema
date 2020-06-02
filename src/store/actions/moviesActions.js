@@ -73,6 +73,7 @@ export const createMovie = (formValues) =>  async (dispatch, getState, {getFires
         movieName,               
         createdAt: new Date(),
     }).then((response) => {
+        //console.log('createMovie', response)
         dispatch ( { type: CREATE_MOVIE_SUCCESS, payload:response })
     }).catch((err) =>{
         dispatch ( { type: CREATE_MOVIE_FAILED, payload:err })

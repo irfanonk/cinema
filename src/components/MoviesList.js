@@ -27,10 +27,12 @@ class MoviesList extends Component {
             if (currentUserId === registeredUserId  ) {
                 return (
                     <React.Fragment>
-                        <Link to={`/movies/edit/${movieName}`} className="circular ui icon purple button">
+                        <Link to={`/movies/edit/${movieName}`} 
+                        className="circular ui icon purple button" data-tooltip="edit" data-position="left center">
                             <i className="edit icon"></i>
                     </Link>
-                    <Link to={`/movies/delete/${movieName}`} className="circular ui icon red button">
+                    <Link to={`/movies/delete/${movieName}`} 
+                    className="circular ui icon red button"  data-tooltip="delete" data-position="right center">
                             <i className="trash icon"></i>
                     </Link>
                     </React.Fragment>
@@ -38,14 +40,14 @@ class MoviesList extends Component {
             }
         }
         return (
-            <React.Fragment>
-            <button className="circular ui icon button">
+            <div data-tooltip="sign in" >
+            <button className="circular ui icon button"  >
                 <i className="edit icon"></i>
             </button>
             <button className="circular ui icon button">
                 <i className="icon trash"></i>
           </button>
-          </React.Fragment>
+          </div>
         )
     }
 
@@ -113,7 +115,7 @@ class MoviesList extends Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log('state:', state)
+    //console.log('state:', state)
     return ({
         firestoreMovies: state.firestore.ordered.cinema,
         auth:state.auth,

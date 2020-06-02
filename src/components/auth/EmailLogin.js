@@ -17,6 +17,7 @@ class EmailLogin extends Component {
         }
     }
 
+
     renderInput = ( { input, label, meta} ) => {
         //console.log("meta:", meta)
         //console.log("input:", input)
@@ -63,9 +64,9 @@ class EmailLogin extends Component {
                     </div>
                 </div>
                 {auth.logRes.message ?
-                <div className="ui pointing label">
-                    {auth.logRes.message}
-                </div>
+                    <div className="ui pointing label">
+                        {auth.logRes.message}
+                    </div>
                 : null }
             </div>
 

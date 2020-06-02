@@ -1,6 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { logOut } from '../../store/actions/authActions';
+import { firestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
+import _ from 'lodash';
 
 class UserProfile extends Component {
 
@@ -26,52 +28,68 @@ class UserProfile extends Component {
     }
     render() {
         const userProfile = this.renderUserProfile()
-        console.log('userProfile', userProfile)
+        const {firestoreMovies } = this.props
+        //console.log('firestoreMovies', firestoreMovies)
+        const userMovies = _.pickBy(firestoreMovies, '5MHdPhSZ7zqBmqJ96OQJ')
+        //console.log('userMovies', userMovies)
         return (
             <div>
-                    <div className="column">
-                        <div className="item">
-                            <div className="image">
-                                <img src={userProfile.imageUrl}/>
-                            </div>
+                <div>
+                    <div className="item">
+                        <div className="image">
+                            <img src={userProfile.imageUrl}/>
                         </div>
                     </div>
-                    <div className="ui horizontal divider"> User Informations</div>
-                    <div className="column">
-                        <div className="item">
-                            <div className="content">
-                                <div className="header"></div>
-                                <div className="meta">
-                                    <span>Name: </span>
-                                    {userProfile.userName}
-                                </div>
-                                <div className="meta">
-                                    <span>Email</span>
-                                    {userProfile.userEmail}
-                                </div>
-                                <div className="meta">
-                                    <span>Id</span>
-                                    {userProfile.userId}
-                                </div>
-                            </div>
-                        </div>
+                </div>
+                <div className="ui horizontal divider"> 
+                <i className="info icon"></i> User Informations
+                </div>
+                <div className="item">
+                    <i className="large user icon"></i>
+                    <div className="content">
+                    <a className="header">Name</a>
+                    <div className="description">{userProfile.userName}</div>
                     </div>
-                    <div className="ui horizontal divider"></div>
+                </div>
+                <div className="item">
+                    <i className="large mail icon"></i>
+                    <div className="content">
+                    <a className="header">Email</a>
+                    <div className="description">{userProfile.userEmail}</div>
+                    </div>
+                </div>
+                <div className="item">
+                    <i className="large tag icon"></i>
+                    <div className="content">
+                    <a className="header">ID</a>
+                    <div className="description">{userProfile.userId}</div>
+                    </div>
+                </div>
                 </div>
         )
     }
 }
 const mapStateToProps = (state) => {
-    console.log('state:', state)
+    console.log('user frofile state:', state)
     // console.log('movie id:', state.movie.id)
-    
+    const movies = _.filter(state.firestore.ordered.cinema, _.matches({'country':'b'}))
+    const moviesOne =_.mapValues(state.firestore.ordered.cinema, function(o) { return o.title; });
+    console.log('user movies', movies)
+    //console.log('user moviesOne', moviesOne)
     return ({
         auth: state.auth,
         emailAuth:state.firebase,
+        firestoreMovies:state.firestore.ordered.cinema,
     })
 }
 
 
 
 
-export default connect(mapStateToProps, { logOut })(UserProfile);
+export default compose(
+    connect(mapStateToProps, { }),
+    firestoreConnect([
+        { collection: 'cinema' },
+        { collection: 'users' }
+    ])
+)(UserProfile) 

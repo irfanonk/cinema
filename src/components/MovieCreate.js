@@ -122,8 +122,8 @@ class MovieCreate extends Component {
             )
         } else if (!auth.isSignedIn && emailAuth.auth.isEmpty) {
             return (
-                <div style={{ textAlign: 'center' }}>
-                    <div className="ui icon message" style={{ marginTop: "100px" }} >
+                <div  style={{ textAlign: 'center', height:"70vh"}}>
+                    <div className="ui icon message" style={{ margin: "auto" }} >
                         <i className="film icon"></i>
                         <div className="content">
                             <div className="header">
@@ -135,7 +135,7 @@ class MovieCreate extends Component {
             )
         } else {
             return (
-                <div >
+                <div style={{ textAlign: 'center', height:"70vh"}}>
                     <div className="ui active dimmer">
                         <div className="ui middle text loader">
                             <div className="item">

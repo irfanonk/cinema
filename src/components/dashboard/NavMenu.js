@@ -134,7 +134,7 @@ class NavMenu extends React.Component {
                 vertical
                 visible={this.state.visible}
                 direction='right'
-                width='wide'
+                width='very wide'
                 style={{background:'#923292'}}
             >
                 <div onClick={() => this.setState({visible:false})} className="ui left item">

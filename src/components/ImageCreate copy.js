@@ -34,7 +34,7 @@ import { createImage, uploadImage, deleteImage, clearCreateValues } from '../sto
     }
 
     onDeleteClick = () => {
-        this.props.deleteImage(this.props.image.imageMetadata.name)
+        this.props.ge(this.props.image.imageMetadata.name)
     }
 
     render() {
@@ -51,19 +51,25 @@ import { createImage, uploadImage, deleteImage, clearCreateValues } from '../sto
         return (
 
             <div style={{backgroundColor:'#d4d1dca6', margin:'30px 0 30px 0', alignContent:'center' }} >
-                <div className="ui stackable center aligned grid" style={{margin:'auto'}}>
-                    <div className="row">
-                        <div className="column">
+                <div className="ui there column stackable center aligned grid">
+                    <div className="sixteen wide column">
                             <input 
                             className="ui input"
                             type="file" 
                             accept='.jpg, .png, .jpeg' 
                             onChange={this.onChange} 
                             />
-                        </div>
                     </div >
-                    <div className="row">
-                        <div className="eight wide column" style={{margin:'auto'}} >
+                    <div className="sixteen wide column row">
+                        <div className="five wide column">
+                            <h3>Image Preview</h3>
+                            <img 
+                            className="ui medium image"
+                            src={imageSrc} 
+                            style={{maxWidth:"200px", maxHeight:"300px", margin:'auto'}} 
+                            />
+                        </div>
+                        <div className="six wide column" style={{margin:'auto'}} >
                             <div className="ui teal progress" >
                                 <div className="bar" style={{width: `${uploadImgPercent}%`}}>
                                     <div className="progress" >
@@ -90,7 +96,7 @@ import { createImage, uploadImage, deleteImage, clearCreateValues } from '../sto
 
                             </button>
                         </div>
-                        <div className="eight wide column">
+                        <div className="five wide column">
                             <h3>Uploaded Image</h3>
                             <img 
                             className="ui medium image"
@@ -99,7 +105,11 @@ import { createImage, uploadImage, deleteImage, clearCreateValues } from '../sto
                             />
                         </div>
                     </div>  
-                </div> 
+                    <div className="ten wide column">
+                        
+                    </div>
+                </div>
+                    
                 </div>
             
         )
