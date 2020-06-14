@@ -1,8 +1,10 @@
 import {
     CREATE_MOVIE_SUCCESS, 
     CREATE_MOVIE_FAILED,
-    FETCH_MOVIES, 
-    FETCH_MOVIE,
+    FETCH_MOVIES_SUCCESS,
+    FETCH_MOVIES_ERROR, 
+    FETCH_MOVIE_SUCCESS,
+    FETCH_MOVIE_ERROR, 
     CREATE_IMAGE,
     DELETE_MOVIE_SUCCESS,
     DELETE_MOVIE_FAILED,
@@ -18,6 +20,9 @@ import {
 
 } from './types';
 import { storage } from '../../apis/fbConfig';
+import axios from 'axios';
+import APIKey from '../../apis/OMDbApi';
+
 
     export const uploadImage = (storageName, imageName) => (dispatch, getState) => {
    console.log( 'uploadImage invoked', storageName + '/' + imageName)
@@ -80,12 +85,6 @@ export const createMovie = (formValues) =>  async (dispatch, getState, {getFires
     })
 }
 
-// export const createMovie = (formValues) => async (dispatch) => {
-//     formValues.createdAt = new Date();
-//     const response = await movies.post('/movies', {...formValues })
-//     dispatch ( { type: CREATE_MOVIE, payload:response.data }) 
-//     //console.log('createMovie response', response)
-// }
 
 //to use image as a blob for preview
 export const createImage = (image) => async dispatch =>{
@@ -138,13 +137,3 @@ export const clearCreateValues = () => {
 }
 
 
-// export const fetchMovies = () => async (dispatch) => {
-//     const response = await movies.get('/movies')
-//     dispatch ({type:FETCH_MOVIES, payload:response.data})
-// }
-
-// export const fetchMovie = (id) => async (dispatch) => {
-//     const response = await movies.get(`/movies/${id}`);
-//     dispatch ({type:FETCH_MOVIE, payload:response.data})
-//     //console.log('fetchMovie action:', response.data)
-// }

@@ -70,12 +70,12 @@ class UserProfile extends Component {
     }
 }
 const mapStateToProps = (state) => {
-    console.log('user frofile state:', state)
-    // console.log('movie id:', state.movie.id)
-    const movies = _.filter(state.firestore.ordered.cinema, _.matches({'country':'b'}))
-    const moviesOne =_.mapValues(state.firestore.ordered.cinema, function(o) { return o.title; });
-    console.log('user movies', movies)
-    //console.log('user moviesOne', moviesOne)
+    // console.log('user frofile state:', state)
+    // // console.log('movie id:', state.movie.id)
+    // const movies = _.filter(state.firestore.ordered.cinema, _.matches({'country':'b'}))
+    // const moviesOne =_.mapValues(state.firestore.ordered.cinema, function(o) { return o.title; });
+    // console.log('user movies', movies)
+    // //console.log('user moviesOne', moviesOne)
     return ({
         auth: state.auth,
         emailAuth:state.firebase,

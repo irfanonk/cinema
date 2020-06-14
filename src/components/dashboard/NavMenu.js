@@ -67,6 +67,11 @@ class NavMenu extends React.Component {
                         <i className="user icon"></i>
                     </button>
                     <GoogleAuth/>
+                    <button 
+                    className="ui blue basic icon button" data-tooltip="Add New User" data-position="bottom center"
+                    onClick={() => this.setState({visible:'visible', logIn:false, createUser:true, userProfile:false})}>
+                        <i className=" add user icon"></i>  
+                    </button>
                 </div>
             )
         }else if(!emailAuth.auth.isEmpty){

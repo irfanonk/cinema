@@ -9,7 +9,7 @@ import { createImage, uploadImage, deleteImage, clearCreateValues } from '../sto
     }
 
     componentDidUpdate(pP) {
-        if(pP.image.deleteImg !== this.props.image.deleteImg) {
+        if(pP.image.deleteImg !== this.props.image.deleteImg ) {
             setTimeout(() => {
                 this.props.clearCreateValues()
             }, 2500);
@@ -43,8 +43,8 @@ import { createImage, uploadImage, deleteImage, clearCreateValues } from '../sto
         const { creImgChng } = this.state
         console.log('ImageCreate', this.props)
         const imageSrc 
-            = this.props.initialImgSrc && !createdImage.imgPrevUrl ? this.props.initialImgSrc 
-            : !this.props.initialImgSrc && createdImage.imgPrevUrl ? createdImage.imgPrevUrl 
+            = this.props.initialImgSrc && !uploadedImgUrl ? this.props.initialImgSrc 
+            : !this.props.initialImgSrc && uploadedImgUrl ? uploadedImgUrl 
             : noImagePreview
     
         
@@ -53,7 +53,7 @@ import { createImage, uploadImage, deleteImage, clearCreateValues } from '../sto
             <div style={{backgroundColor:'#d4d1dca6', margin:'30px 0 30px 0', alignContent:'center' }} >
                 <div className="ui stackable center aligned grid" style={{margin:'auto'}}>
                     <div className="row">
-                        <div className="column">
+                        <div className="eight wide column">
                             <input 
                             className="ui input"
                             type="file" 
@@ -61,6 +61,8 @@ import { createImage, uploadImage, deleteImage, clearCreateValues } from '../sto
                             onChange={this.onChange} 
                             />
                         </div>
+                            
+
                     </div >
                     <div className="row">
                         <div className="eight wide column" style={{margin:'auto'}} >
@@ -91,10 +93,9 @@ import { createImage, uploadImage, deleteImage, clearCreateValues } from '../sto
                             </button>
                         </div>
                         <div className="eight wide column">
-                            <h3>Uploaded Image</h3>
                             <img 
                             className="ui medium image"
-                            src={uploadedImgUrl ? uploadedImgUrl : noImagePreview} 
+                            src={imageSrc} 
                             style={{maxWidth:"200px", maxHeight:"300px", margin:'auto'}} 
                             />
                         </div>

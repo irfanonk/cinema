@@ -1,7 +1,5 @@
 import _ from 'lodash';
-import { 
-    FETCH_MOVIES, 
-    FETCH_MOVIE, 
+import {  
     CREATE_MOVIE_SUCCESS,
     CREATE_MOVIE_FAILED,
     DELETE_MOVIE_SUCCESS,

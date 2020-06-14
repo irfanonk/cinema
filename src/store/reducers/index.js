@@ -3,6 +3,7 @@ import { reducer as formReducer } from 'redux-form';
 import movieReducer from './movieReducer';
 import imageReducer from './imageReducer';
 import authReducer from './authReducer';
+import searchReducer from './searchReducer';
 import { firestoreReducer } from 'redux-firestore';
 import { firebaseReducer } from 'react-redux-firebase';
 
@@ -15,4 +16,5 @@ export default combineReducers({
     auth:authReducer,
     firestore:firestoreReducer,
     firebase:firebaseReducer,
+    searchMovies:searchReducer,
 })

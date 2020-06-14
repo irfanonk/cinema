@@ -41,12 +41,12 @@ class MoviesList extends Component {
         }
         return (
             <div data-tooltip="sign in" >
-            <button className="circular ui icon button"  >
-                <i className="edit icon"></i>
-            </button>
-            <button className="circular ui icon button">
-                <i className="icon trash"></i>
-          </button>
+                <div className="circular ui icon button"  >
+                    <i className="edit icon"></i>
+                </div>
+                <div className="circular ui icon button">
+                    <i className="icon trash"></i>
+            </div>
           </div>
         )
     }

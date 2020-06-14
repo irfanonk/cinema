@@ -11,6 +11,10 @@ import MovieForm from './MovieForm'
 
 class MovieEdit extends Component {
     
+    state = {
+        fbPageY:'',
+    }
+
     componentDidMount () {
         this.props.clearCreateValues()
     }
@@ -46,22 +50,29 @@ class MovieEdit extends Component {
 
 
     renderEdit() {
-        if(!this.props.movie){
+        const { auth, emailAuth, movie, history } = this.props
+        if(!movie){
             return <Loader />
-        }else 
+        }else if(auth.isSignedIn || !emailAuth.isEmpty ){
+            return (
+                <React.Fragment>
+                    <div className="ui yellow center aligned segment">
+                        <h1 className="header">{`Edit Movie: ${this.props.movie.title}`} </h1>
+                    </div>
+                    <MovieForm 
+                    onSubmit={this.onSubmit}
+                    initialValues={_.pickBy(this.props.movie)}
+                    initialImgSrc={this.props.movie.image.imageUrl}
+                    submitButtonName='Update this Movie'
+                    pageY={(y) => this.setState({fbPageY:y})}
+                    />
+                </React.Fragment>
+            )
+        }else
         return (
-            <React.Fragment>
-                <div className="ui yellow center aligned segment">
-                    <h1 className="header">{`Edit Movie: ${this.props.movie.title}`} </h1>
-                </div>
-                <MovieForm 
-                onSubmit={this.onSubmit}
-                initialValues={_.pickBy(this.props.movie)}
-                initialImgSrc={this.props.movie.image.imageUrl}
-                submitButtonName='Update this Movie'
-                />
-            </React.Fragment>
+            history.push('/')
         )
+        
     }
     render() {
         console.log('edit props', this.props.movie)
@@ -75,13 +86,15 @@ class MovieEdit extends Component {
 
 }
 const mapStateToProps = (state, ownProps) => {
-    //console.log('state:', state)
+    console.log('state:', state)
     const movies = _.mapKeys(state.firestore.ordered.cinema, 'movieName')
-    console.log('movies:', movies)
-    console.log('ownProps:', ownProps)
+    //console.log('movies:', movies)
+    //console.log('ownProps:', ownProps)
     return ({
         movie: movies[ownProps.match.params.movieName],
         image:state.image,
+        emailAuth:state.firebase.auth,
+        auth:state.auth,
     })
 }
 
